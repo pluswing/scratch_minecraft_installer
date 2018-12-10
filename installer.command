@@ -2,25 +2,22 @@ FORGE_VERSION='1.12.2-forge1.12.2-14.23.5.2768'
 GAME_DIRECTORY="${HOME}/minecraft_scratch"
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
-JAVAC_PATH=$(which javac)
-if [ ! $JAVAC_PATH ]; then
-  echo "JDKをインストールしてください。"
-  exit
-fi
-
 curl https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.12.2-14.23.5.2768/forge-1.12.2-14.23.5.2768-installer.jar -L -o forge.jar
 echo "Minecraft Forgeのインストーラーを起動します。"
 echo "この画面は閉じずに、clientをインストールしてください。"
 
-java -jar forge.jar > /dev/null
+${SCRIPT_DIR}/jre/bin/java -jar forge.jar > /dev/null
+rm forge.jar forge.jar.log
 
 echo "MinecraftとScratchを繋ぐソフトをダウンロードしています。"
 
 curl https://github.com/arpruss/raspberryjammod/releases/download/0.94/mods.zip -L -o mods.zip
 unzip mods.zip 1.12.2/RaspberryJamMod.jar
+rm mods.zip
 
 curl https://github.com/arpruss/raspberryjammod/releases/download/0.94/python-scripts.zip -L -o python-scripts.zip
-unzip python-scripts.zip
+unzip python-scripts.zip # -> mcpipy
+rm python-scripts.zip
 
 curl https://raw.githubusercontent.com/pilliq/scratchpy/master/scratch/scratch.py -L -o scratch.py
 curl https://raw.githubusercontent.com/scratch2mcpi/scratch2mcpi/master/scratch2mcpi.py -L -o scratch2mcpi.py
@@ -29,6 +26,7 @@ curl https://raw.githubusercontent.com/scratch2mcpi/minecraft-stuff/master/minec
 
 mkdir -p "$GAME_DIRECTORY/mods/"
 mv "1.12.2/RaspberryJamMod.jar" "$GAME_DIRECTORY/mods/"
+rm -rf 1.12.2
 mv mcpipy "$GAME_DIRECTORY/"
 mv scratch.py "$GAME_DIRECTORY/mcpipy/"
 mv scratch2mcpi.py "$GAME_DIRECTORY/mcpipy/"
